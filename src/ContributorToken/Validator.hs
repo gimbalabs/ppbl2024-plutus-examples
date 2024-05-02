@@ -36,9 +36,6 @@ contributorReferenceValidator param datum action ctx@ScriptContext{ scriptContex
     inVals :: [CurrencySymbol]
     inVals = symbols $ valueSpent info
 
-    inputHasAdminToken :: Bool
-    inputHasAdminToken = adminTokenPolicyId param `elem` inVals
-
     ownOutput :: Maybe TxOut
     ownOutput = case getContinuingOutputs ctx of
       [o] -> Just o

@@ -72,3 +72,4 @@ library
                         Faucet.Validator
                         ContributorToken.Types
                         ContributorToken.Validator
+                        ContributorToken.Compiler

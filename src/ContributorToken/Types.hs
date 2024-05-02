@@ -28,7 +28,7 @@ import Prelude (Show (..))
 import qualified Prelude as Pr
 
 data ContribReferenceParams = ContribReferenceParams
-  { adminTokenPolicyId :: CurrencySymbol,
+  { ppblCourseYear :: Integer,
     contributorTokenPolicyId :: CurrencySymbol
   }
   deriving (Pr.Eq, Pr.Ord, Show, Generic)
