@@ -78,8 +78,8 @@ treasuryValidator fp datum redeemer ctx =
       checkDatum = case getDatum of
         Nothing -> False
         Just d -> d == datum
-   in traceIfFalse "Input must include PPBL 2023 token" inputHasAccessToken
-        && traceIfFalse "Must send PPBL 2023 token back to sender" outputHasAccessToken
+   in traceIfFalse "Input must include PPBL 2024 token" inputHasAccessToken
+        && traceIfFalse "Must send PPBL 2024 token back to sender" outputHasAccessToken
         && traceIfFalse "Sender must receive faucet tokens" outputHasFaucetToken
         && traceIfFalse "Must return remaining faucet tokens to contract address" faucetContractGetsRemainingTokens
         && traceIfFalse "Cannot change datum" checkDatum

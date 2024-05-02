@@ -18,8 +18,8 @@ import Faucet.Validator as Validator
 faucetParams :: FaucetParams
 faucetParams =
   FaucetParams
-    { accessTokenSymbol = "05cf1f9c1e4cdcb6702ed2c978d55beff5e178b206b4ec7935d5e056",
-      faucetTokenSymbol = "a4af431031b91e9130aa6b920c3b8b5c18befeb79e9e16d473205396"
+    { accessTokenSymbol = "903c419ee7ebb6bf4687c61fb133d233ef9db2f80e4d734db3fbaf0b",
+      faucetTokenSymbol = "5e74a87d8109db21fe3d407950c161cd2df7975f0868e10682a3dbfe"
     }
 
 writeValidator :: FilePath -> Plutus.V2.Ledger.Api.Validator -> IO (Either (FileError ()) ())
