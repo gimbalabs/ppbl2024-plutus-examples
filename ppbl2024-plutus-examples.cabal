@@ -67,6 +67,7 @@ library
 
   exposed-modules:
                         PPBL.AlwaysSucceeds
+                        PPBL.Compiler
                         Faucet.Compiler
                         Faucet.Types
                         Faucet.Validator
