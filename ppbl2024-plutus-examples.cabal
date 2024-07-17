@@ -74,3 +74,4 @@ library
                         ContributorToken.Types
                         ContributorToken.Validator
                         ContributorToken.Compiler
+                        Minting.SecretNumberPolicy
