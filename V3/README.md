@@ -17,23 +17,23 @@ In a terminal window on the host machine
 ```
 $ mkdir ~/src
 $ cd ~/src
-$ git clone https://github.com/lley154/cardano-plinth-examples
-$ cd cardano-plinth-examples
+$ git clone https://github.com/gimbalabs/ppbl2024-plutus-examples.git
+$ cd ppbl2024-plutus-examples/V3
 $ docker run \
-  -v /absolute-path-to-src-directory/src/cardano-plinth-examples:/workspaces/cardano-plinth-examples  \
+  -v /absolute-path-to-src-directory/src/ppbl2024-plutus-examples:/workspaces/ppbl2024-plutus-examples/V3  \
   -it ghcr.io/input-output-hk/devx-devcontainer:x86_64-linux.ghc96-iog
 ```
 ## Compiling Haskell Files
 Inside the container run the following commands
 ```
 [workspaces] cd cardano-plinth-examples
-[workspaces/cardano-plinth-examples] cabal update
-[workspaces/cardano-plinth-examples] cabal build
+[workspaces/ppbl2024-plutus-examples/V3] cabal update
+[workspaces/ppbl2024-plutus-examples/V3] cabal build
 ```
 ## Generating Blueprints
 The cabal build will take a while and once it is completed, you should be able to execute the following commands to generate the blueprint files.
 ```
-[workspaces/cardano-plinth-examples] cabal run gen-faucet-validator-blueprint -- ./off-chain/faucet-validator-blueprint.json
+[workspaces/ppbl2024-plutus-examples/V3] cabal run gen-faucet-validator-blueprint -- ./off-chain/faucet-validator-blueprint.json
 ```
 
 ## Running a local Cardano devnet
@@ -98,7 +98,7 @@ $ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bas
 Close and then reopen a new terminal window
 ```
 $ nvm install v22.13.0
-$ cd cardano-plinth-examples/test
+$ cd ppbl2024-plutus-examples/V3/test
 $ npm install
 ```
 
@@ -145,7 +145,7 @@ You can also go to the Yaci viewer http://localhost:5173/ and view the transacti
 ## Profiling the contract
 In a new terminal window
 ```
-$ cd ~/src/cardano-plinth-examples
+$ cd ~/src/ppbl2024-plutus-examples/V3
 $ sudo apt update
 $ sudo apt install wget
 $ sudo apt install jq
@@ -196,12 +196,12 @@ Predicted execution time: 4.544 μs
 
 ## Confirming the protocol parameters
 ```
-lawrence@lawrence-MacBookAir7-2:~/src/cardano-plinth-examples$ docker ps
+$ docker ps
 CONTAINER ID   IMAGE                                                              COMMAND                  CREATED      STATUS        PORTS                                                                                                                                                                      NAMES
 c619fbc1c318   ghcr.io/input-output-hk/devx-devcontainer:x86_64-linux.ghc96-iog   "/bin/bash"              7 days ago   Up 12 hours                                                                                                                                                                              gallant_varahamihira
 af9e019fe37a   bloxbean/yaci-cli:0.10.0-preview5                                  "sleep infinity"         9 days ago   Up 12 hours   0.0.0.0:1337->1337/tcp, 0.0.0.0:1442->1442/tcp, 0.0.0.0:3001->3001/tcp, 0.0.0.0:3333->3333/tcp, 0.0.0.0:8080->8080/tcp, 0.0.0.0:8090->8090/tcp, 0.0.0.0:10000->10000/tcp   node1-yaci-cli-1
 b74ba32968d4   bloxbean/yaci-viewer:0.10.0-preview5                               "docker-entrypoint.s…"   9 days ago   Up 12 hours   0.0.0.0:5173->5173/tcp                                                                                                                                                     node1-yaci-viewer-1
-lawrence@lawrence-MacBookAir7-2:~/src/cardano-plinth-examples$ docker exec -it node1-yaci-cli-1 bash
+$ docker exec -it node1-yaci-cli-1 bash
 root@af9e019fe37a:/app# 
   
 # cardano-cli query protocol-parameters --testnet-magic 42
