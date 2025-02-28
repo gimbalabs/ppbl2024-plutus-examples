@@ -1,0 +1,41 @@
+{
+  "$id": "always-succeeds-validator",
+  "$schema": "https://cips.cardano.org/cips/cip57/schemas/plutus-blueprint.json",
+  "$vocabulary": {
+    "https://cips.cardano.org/cips/cip57": true,
+    "https://json-schema.org/draft/2020-12/vocab/applicator": true,
+    "https://json-schema.org/draft/2020-12/vocab/core": true,
+    "https://json-schema.org/draft/2020-12/vocab/validation": true
+  },
+  "preamble": {
+    "title": "Always Succeeds Validator",
+    "description": "Blueprint for a Plutus script that always validates",
+    "version": "1.1.0",
+    "plutusVersion": "v3",
+    "license": "MIT"
+  },
+  "validators": [
+    {
+      "title": "Always Succeeds Validator",
+      "description": "Plutus script that always validates any transaction",
+      "redeemer": {
+        "title": "Redeemer",
+        "description": "Redeemer for the always succeeding validator",
+        "purpose": "spend",
+        "schema": {
+          "$ref": "#/definitions/BuiltinData"
+        }
+      },
+      "datum": {
+        "title": "Datum",
+        "description": "Datum for the always succeeding validator",
+        "purpose": "spend",
+        "schema": {
+          "$ref": "#/definitions/BuiltinData"
+        }
+      },
+      "compiledCode": "58ab010100253293255333573466e1d200035573a002226464646464aa666ae68cdc3a40046aae7400444c8c964c8c8c954ccd5cd19b87480080084600422aa666ae68cdc3a4000004230013574200211300c491035054310035573c0046aae74004dd51aba13574400521800465ac1aba100135573c002232d61baa357426ae8800cd5d08011aba1002357440026aae78004465ac3754005149a2600292010350543500119319ab9c00180001",
+      "hash": "b4bbbe9dc5d12fdb01c2451754acc6e7cdfa8862077f7c08904ed4f9"
+    }
+  ]
+}
