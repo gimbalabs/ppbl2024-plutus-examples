@@ -26,7 +26,7 @@ $ docker run \
 ## Compiling Haskell Files
 Inside the container run the following commands
 ```
-[workspaces] cd cardano-plinth-examples
+[workspaces] cd ppbl2024-plutus-examples/V3
 [workspaces/ppbl2024-plutus-examples/V3] cabal update
 [workspaces/ppbl2024-plutus-examples/V3] cabal build
 ```
