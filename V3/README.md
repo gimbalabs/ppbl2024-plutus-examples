@@ -202,8 +202,6 @@ c619fbc1c318   ghcr.io/input-output-hk/devx-devcontainer:x86_64-linux.ghc96-iog 
 af9e019fe37a   bloxbean/yaci-cli:0.10.0-preview5                                  "sleep infinity"         9 days ago   Up 12 hours   0.0.0.0:1337->1337/tcp, 0.0.0.0:1442->1442/tcp, 0.0.0.0:3001->3001/tcp, 0.0.0.0:3333->3333/tcp, 0.0.0.0:8080->8080/tcp, 0.0.0.0:8090->8090/tcp, 0.0.0.0:10000->10000/tcp   node1-yaci-cli-1
 b74ba32968d4   bloxbean/yaci-viewer:0.10.0-preview5                               "docker-entrypoint.s…"   9 days ago   Up 12 hours   0.0.0.0:5173->5173/tcp                                                                                                                                                     node1-yaci-viewer-1
 $ docker exec -it node1-yaci-cli-1 bash
-root@af9e019fe37a:/app# 
-  
 # cardano-cli query protocol-parameters --testnet-magic 42
 
 ...
