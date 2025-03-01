@@ -6,6 +6,7 @@
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE ImportQualifiedPost        #-}
 {-# LANGUAGE MultiParamTypeClasses      #-}
+{-# LANGUAGE NamedFieldPuns             #-}
 {-# LANGUAGE NoImplicitPrelude          #-}
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE PatternSynonyms            #-}
@@ -37,7 +38,6 @@ import PlutusTx
     )
 import PlutusTx.Prelude 
     ( Bool(..)
-    , BuiltinData
     , BuiltinUnit
     , Integer
     , check
@@ -54,20 +54,18 @@ secretNumberTypedMintingPolicy ::
 secretNumberTypedMintingPolicy redeemer = 
   traceIfFalse "Redeemer Does Not Match Secret Number" (redeemer == 1618033988)
 
+
 secretNumberUntypedMintingPolicy ::
-  BuiltinData ->
+  V3Data.ScriptContext ->
   BuiltinUnit
-secretNumberUntypedMintingPolicy scriptContext =
-  check
-    $ case V3Data.unsafeFromBuiltinData scriptContext of
-      V3Data.ScriptContext
-        _txInfo
-        (V3Data.Redeemer redeemer)
-        _spendingScript ->
-          secretNumberTypedMintingPolicy
-            (V3.unsafeFromBuiltinData redeemer)
+secretNumberUntypedMintingPolicy ctx =
+  check $ secretNumberTypedMintingPolicy (getRedeemer ctx)
+  where
+    getRedeemer :: V3Data.ScriptContext -> Integer
+    getRedeemer V3Data.ScriptContext {V3Data.scriptContextRedeemer = V3Data.Redeemer redeemer} = 
+      V3Data.unsafeFromBuiltinData redeemer
 
 secretNumberMintingPolicyScript ::
-  CompiledCode (BuiltinData -> BuiltinUnit)
+  CompiledCode (V3Data.ScriptContext -> BuiltinUnit)
 secretNumberMintingPolicyScript =
   $$(compile [||secretNumberUntypedMintingPolicy||])

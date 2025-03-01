@@ -1,5 +1,6 @@
 {-# LANGUAGE DataKinds           #-}
 {-# LANGUAGE ImportQualifiedPost #-}
+{-# LANGUAGE NamedFieldPuns      #-}
 {-# LANGUAGE NoImplicitPrelude   #-}
 {-# LANGUAGE NumericUnderscores  #-}
 {-# LANGUAGE OverloadedStrings   #-}
@@ -19,10 +20,10 @@ import PlutusTx (CompiledCode, compile)
 import PlutusTx.Prelude
     ( Bool
     , Bool(..)
-    , BuiltinData
     , BuiltinUnit
     , Maybe(Just)
     , check
+    , traceError
     , ($)
     )
 import PlutusLedgerApi.V3 qualified as V3
@@ -32,20 +33,23 @@ typedValidator :: V3.Datum -> V3.Redeemer-> Bool
 typedValidator _datum _redeemer = 
   True
 
-untypedValidator :: BuiltinData -> BuiltinUnit
-untypedValidator scriptContext =
-  check
-    $ case V3Data.unsafeFromBuiltinData scriptContext of
-      V3Data.ScriptContext
-        _txInfo
-        (V3Data.Redeemer redeemer)
-        (V3Data.SpendingScript _ (Just (V3Data.Datum datum))) ->
-          typedValidator
-            (V3.unsafeFromBuiltinData datum)
-            (V3.unsafeFromBuiltinData redeemer)
-      _ -> False
+untypedValidator :: 
+  V3Data.ScriptContext -> 
+  BuiltinUnit
+untypedValidator ctx =
+  check $ typedValidator getDatum (getRedeemer ctx) 
+  where
+    getRedeemer :: V3Data.ScriptContext -> V3Data.Redeemer
+    getRedeemer V3Data.ScriptContext {V3Data.scriptContextRedeemer} = scriptContextRedeemer
+
+    getDatum :: V3Data.Datum
+    getDatum =
+      case V3Data.scriptContextScriptInfo ctx of
+        V3Data.SpendingScript _TxOutRef (Just (V3Data.Datum datum)) -> V3.unsafeFromBuiltinData datum
+        _ -> traceError "No datum found"
+
 
 {-# INLINEABLE untypedValidator #-}
-alwaysSucceedsScript :: CompiledCode (BuiltinData -> BuiltinUnit)
+alwaysSucceedsScript :: CompiledCode (V3Data.ScriptContext -> BuiltinUnit)
 alwaysSucceedsScript =
   $$(compile [||untypedValidator||])

@@ -20,7 +20,7 @@ import {
 } from "@meshsdk/core";
 
 import alwaysSucceedsBlueprint from "../off-chain/always-succeeds-validator-blueprint.json";
-import secretNumberPolicyBlueprint from "../off-chain/secret-number-policy-blueprint.json";
+import secretNumberPolicyBlueprint from "../off-chain/secret-number-minting-policy-blueprint.json";
 import faucetBlueprint from "../off-chain/faucet-validator-blueprint.json";
 import oneShotMintingBlueprint from "../off-chain/one-shot-minting-policy-blueprint.json";
 

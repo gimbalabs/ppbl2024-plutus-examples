@@ -5,11 +5,12 @@
         "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check",
         "test-faucet": "jest faucet.test.ts --no-watch",
         "test-always": "jest always.test.ts --no-watch",
-        "test-secret": "jest secret.test.ts --no-watch"
+        "test-secret": "jest secret.test.ts --no-watch",
+        "test": "jest *.test.ts --no-watch"
     },
     "dependencies": {
-        "@meshsdk/core": "1.8.12",
-        "@meshsdk/core-csl": "1.8.12"
+        "@meshsdk/core": "1.8.14",
+        "@meshsdk/core-csl": "1.8.14"
     },
     "devDependencies": {
         "@types/jest": "^29.5.12",

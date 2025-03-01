@@ -6,6 +6,7 @@
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE ImportQualifiedPost        #-}
 {-# LANGUAGE MultiParamTypeClasses      #-}
+{-# LANGUAGE NamedFieldPuns             #-}
 {-# LANGUAGE NoImplicitPrelude          #-}
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE PatternSynonyms            #-}
@@ -48,7 +49,6 @@ import PlutusTx
 import PlutusTx.AssocMap qualified as Map
 import PlutusTx.Prelude 
     ( Bool(..)
-    , BuiltinData
     , BuiltinUnit
     , Maybe(Just, Nothing)
     , any
@@ -117,22 +117,22 @@ currencyValueOf (V3.Value m) c = case Map.lookup c m of
 
 oneShotUntypedMintingPolicy ::
   OneShotMintingParams ->
-  BuiltinData ->
+  V3Data.ScriptContext ->
   BuiltinUnit
 oneShotUntypedMintingPolicy params ctx =
-  check
-    $ case V3Data.unsafeFromBuiltinData ctx of
-      V3Data.ScriptContext
-        _txInfo
-        (V3Data.Redeemer redeemer)
-        _spendingScript ->
-          oneShotTypedMintingPolicy
-            params (V3.unsafeFromBuiltinData redeemer) (V3.unsafeFromBuiltinData ctx)
+  check $ oneShotTypedMintingPolicy params (getRedeemer ctx) getScriptContext
+  where
+    getRedeemer :: V3Data.ScriptContext -> OneShotMintingRedeemer
+    getRedeemer V3Data.ScriptContext {V3Data.scriptContextRedeemer = V3Data.Redeemer redeemer} = 
+      V3.unsafeFromBuiltinData redeemer
+
+    getScriptContext :: V3.ScriptContext
+    getScriptContext = V3.unsafeFromBuiltinData $ V3.toBuiltinData ctx
 
 
 oneShotMintingPolicyScript ::
   OneShotMintingParams ->
-  CompiledCode (BuiltinData -> BuiltinUnit)
+  CompiledCode (V3Data.ScriptContext -> BuiltinUnit)
 oneShotMintingPolicyScript params =
   $$(compile [||oneShotUntypedMintingPolicy||])
     `unsafeApplyCode` liftCode plcVersion110 params

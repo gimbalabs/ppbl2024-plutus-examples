@@ -64,7 +64,6 @@ import PlutusTx.Blueprint
     )
 import PlutusTx.Prelude
     ( Bool(..)
-    , BuiltinData
     , BuiltinUnit
     , Eq
     , Integer
@@ -153,7 +152,9 @@ faucetTypedValidator fp datum redeemer ctx =
       faucetOutputValue = V3.txOutValue ownOutput
 
       faucetContractGetsRemainingTokens :: Bool
-      faucetContractGetsRemainingTokens = (valueOf faucetInputValue (faucetTokenSymbol fp) (faucetTokenName datum) - (withdrawalAmount datum) == (valueOf faucetOutputValue (faucetTokenSymbol fp) (faucetTokenName datum)))
+      faucetContractGetsRemainingTokens = 
+        (valueOf faucetInputValue (faucetTokenSymbol fp) (faucetTokenName datum) - (withdrawalAmount datum) 
+        == (valueOf faucetOutputValue (faucetTokenSymbol fp) (faucetTokenName datum)))
 
       getDatum :: Maybe FaucetDatum
       getDatum = case V3.txOutDatum ownOutput of
@@ -174,26 +175,23 @@ faucetTypedValidator fp datum redeemer ctx =
         && traceIfFalse "Cannot change datum" checkDatum
 
 
-faucetUntypedValidator :: FaucetParams -> BuiltinData -> BuiltinUnit
+faucetUntypedValidator :: FaucetParams -> V3Data.ScriptContext -> BuiltinUnit
 faucetUntypedValidator params ctx =
-  check (faucetTypedValidator params faucetDatum faucetRedeemer (V3.unsafeFromBuiltinData ctx))
+  check (faucetTypedValidator params getDatum (getRedeemer ctx) (V3.unsafeFromBuiltinData $ V3.toBuiltinData ctx))
   where
-    scriptContext :: V3Data.ScriptContext
-    scriptContext = V3Data.unsafeFromBuiltinData ctx
-
-    faucetDatum :: FaucetDatum
-    faucetDatum =
-      case V3Data.scriptContextScriptInfo scriptContext of
+    getDatum :: FaucetDatum
+    getDatum =
+      case V3Data.scriptContextScriptInfo ctx of
         V3Data.SpendingScript _TxOutRef (Just (V3Data.Datum datum)) -> V3.unsafeFromBuiltinData datum
-        _ -> traceError "Expected SpendingScript with a datum"
+        _ -> traceError "No datum found"
 
-    faucetRedeemer :: FaucetRedeemer
-    faucetRedeemer =
-      V3.unsafeFromBuiltinData (V3Data.getRedeemer (V3Data.scriptContextRedeemer scriptContext))
+    getRedeemer :: V3Data.ScriptContext -> FaucetRedeemer
+    getRedeemer V3Data.ScriptContext {V3Data.scriptContextRedeemer = V3Data.Redeemer redeemer} = 
+      V3.unsafeFromBuiltinData redeemer
 
 {-# INLINEABLE faucetUntypedValidator #-}
 
-faucetValidatorScript :: FaucetParams -> CompiledCode (BuiltinData -> BuiltinUnit)
+faucetValidatorScript :: FaucetParams -> CompiledCode (V3Data.ScriptContext -> BuiltinUnit)
 faucetValidatorScript params =
   $$(compile [||faucetUntypedValidator||])
     `unsafeApplyCode` liftCode plcVersion110 params
