@@ -20,7 +20,7 @@ $ cd ~/src
 $ git clone https://github.com/gimbalabs/ppbl2024-plutus-examples.git
 $ cd ppbl2024-plutus-examples/V3
 $ docker run \
-  -v /absolute-path-to-src-directory/src/ppbl2024-plutus-examples:/workspaces/ppbl2024-plutus-examples/V3  \
+  -v /absolute-path-to-src-directory/src/ppbl2024-plutus-examples/V3:/workspaces/ppbl2024-plutus-examples/V3  \
   -it ghcr.io/input-output-hk/devx-devcontainer:x86_64-linux.ghc96-iog
 ```
 ## Compiling Haskell Files
